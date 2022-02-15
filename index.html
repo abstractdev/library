@@ -14,37 +14,40 @@
   </head>
   <body>
     <div class="main">
-      <button class="newBookBtn">New Book</button>
-      <div class="modal" id="modal">
-        <div class="modal-content">
-          <div class="modal-header">
-            <div class="modal-title">Add New Book</div>
-            <button class="closeButton">&times;</button>
-          </div>
-          <form>
-            <div class="form-container">
-              <div class="title-container">
-                <label for="title">Title</label>
-                <input type="text" id="title" name="title">
-              </div>
-              <div class="author-container">
-                <label for="author">Author</label>
-                <input type="text" id="author" name="author">
-              </div>
-              <div class="pages-container">
-                <label for="pages">Pages</label>
-                <input type="text" id="pages" name="pages">
-              </div>
-              <div class="read-container">
-                <label for="read">Read</label>
-                <input type="checkbox" id="read" name="read">
-              </div>
-            </div>
-          </form>
-        </div>
+      <div class="left-container">
+        <h1>Odin's Library</h1>
+        <button class="newBookBtn">New Book</button>
       </div>
+        <div class="modal" class="toggle" id="modal">
+            <div class="modal-title">Add New Book</div>
+            <div class="close-btn-container">
+              <button class="closeButton">&times;</button>
+            </div>
+            <form>
+              <div class="form-container">
+                <div class="title-container">
+                  <label for="title">Title</label>
+                  <input type="text" id="title" name="title" maxlength="40">
+                </div>
+                <div class="author-container">
+                  <label for="author">Author</label>
+                  <input type="text" id="author" name="author" maxlength="40">
+                </div>
+                <div class="pages-container">
+                  <label for="pages">Pages</label>
+                  <input type="number" id="pages" name="pages">
+                </div>
+                <div class="modal-bottom">
+                  <div class="submit-btn-container">
+                    <button class="submit-btn" type="submit">Submit</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+        </div>
+      <div class="libraryDiv"></div>
     </div>
     
-    <script src="library.js" async defer></script>
+  <script src="library.js"></script>
   </body>
 </html>

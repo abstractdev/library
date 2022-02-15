@@ -3,6 +3,15 @@ const newBookBtn = document.querySelector('.newBookBtn');
 const closeButton = document.querySelector('.closeButton');
 const overlay = document.getElementById('overlay');
 const modal = document.querySelector('#modal');
+const modalContent = document.querySelector('.modal-content');
+const form = document.querySelector('form');
+const formTitle = document.querySelector('#title');
+const formAuthor = document.querySelector('#author');
+const formPages = document.querySelector('#pages');
+const removeButton = document.querySelector('.removeButton');
+const libraryDiv = document.querySelector('.libraryDiv');
+let myLibrary = [];
+
 
 function Book(title, author, pages, read) {
   this.title = title
@@ -11,26 +20,132 @@ function Book(title, author, pages, read) {
   this.read = read
 }
 
-let theHobbit = new Book("The Hobbit", "J.R.R. Tolkien", "295 pages", "not read yet" );
-let asdf = new Book("The asdf", "1234", "69 pages", "read" );
-let qwer = new Book("The qwer", "5678", "420 pages", "not read yet" );
-let myLibrary = [theHobbit, asdf, qwer];
-
-function addBooks() {
-  myLibrary.forEach(function(e) {
-    let bookNew = document.createElement('div');
-    let bookIndex = myLibrary.indexOf(e).toString();
-    bookNew.setAttribute('data-index', bookIndex)
-    main.appendChild(bookNew);
-
-  });
+function toggleDiv() {
+  modal.classList.toggle("toggle");
 }
 
-addBooks(theHobbit, asdf, qwer);
 
+function addBooks() {
+  //create userBook object and push into myLibrary array
+  let userBook = new Book(formTitle.value, formAuthor.value, formPages.value, 'null');
+  myLibrary.push(userBook);
+
+  //create userBook div container with data attribute == index number in myLibrary
+  let bookIndex = myLibrary.indexOf(userBook).toString();
+  let userBookDiv = document.createElement('div');
+  userBookDiv.className = "userBookDiv";
+  userBookDiv.setAttribute('data-index', bookIndex);
+  libraryDiv.appendChild(userBookDiv);
+
+  //create div rows
+  let titleRow = document.createElement('div');
+  titleRow.className = "titleRow";
+  let authorRow = document.createElement('div');
+  authorRow.className = "authorRow";
+  let pagesRow = document.createElement('div');
+  pagesRow.className = "pagesRow";
+  let row4 = document.createElement('div');
+  row4.className = "row4";
+  userBookDiv.appendChild(titleRow);
+  userBookDiv.appendChild(authorRow);
+  userBookDiv.appendChild(pagesRow);
+  userBookDiv.appendChild(row4);
+
+  //create divs for property names
+  let userBookDivTitle = document.createElement('div');
+  userBookDivTitle.className = "userBookDivTitle";
+  let userBookDivAuthor = document.createElement('div');
+  userBookDivAuthor.className = "userBookDivAuthor";
+  let userBookDivPages = document.createElement('div');
+  userBookDivPages.className = "userBookDivPages";
+  let checkboxDiv = document.createElement('div');
+  checkboxDiv.className = "checkboxDiv";
+  let checkbox = document.createElement('input');
+  checkbox.setAttribute('type', 'checkbox');
+  checkbox.setAttribute('id', 'checkbox');
+  checkbox.setAttribute('name', 'checkbox');
+  checkbox.setAttribute('data-index', bookIndex);
+  checkbox.className = "checkbox";
+  let checkboxLabel = document.createElement('label');
+  titleRow.appendChild(userBookDivTitle);
+  authorRow.appendChild(userBookDivAuthor);
+  pagesRow.appendChild(userBookDivPages);
+  row4.appendChild(checkboxDiv);
+  checkboxDiv.appendChild(checkbox);
+  checkboxDiv.appendChild(checkboxLabel);
+
+
+
+  //create divs for property values
+  let userBookDivTitleValue = document.createElement('div');
+  userBookDivTitleValue.className = "userBookDivTitleValue";
+  let userBookDivAuthorValue = document.createElement('div');
+  userBookDivAuthorValue.className = "userBookDivAuthorValue";
+  let userBookDivPagesValue = document.createElement('div');
+  userBookDivPagesValue.className = "userBookDivPagesValue";
+  let removeButtonContainer = document.createElement('div');
+  removeButtonContainer.className = "removeButtonContainer";
+  let removeButton = document.createElement('button');
+  removeButton.className = "removeButton";
+  removeButton.setAttribute('data-index', bookIndex);
+
+  titleRow.appendChild(userBookDivTitleValue);
+  authorRow.appendChild(userBookDivAuthorValue);
+  pagesRow.appendChild(userBookDivPagesValue);
+  row4.appendChild(removeButtonContainer);
+  removeButtonContainer.appendChild(removeButton);
+
+  removeButton.addEventListener("click", function(e) {
+    e.preventDefault();
+
+    //removes the book from myLibrary
+    let indexToRemove = parseInt(removeButton.dataset.index)
+    myLibrary.splice(indexToRemove, 1);
+    console.log(myLibrary);
+
+    //removes the div from the page
+    if (removeButton.dataset.index === userBookDiv.dataset.index) {
+      userBookDiv.remove();
+    }
+  })
+
+  //display book data in div
+  userBookDivTitle.textContent = "Title:";
+  userBookDivAuthor.textContent = "Author:";
+  userBookDivPages.textContent = "Pages:";
+
+  userBookDivTitleValue.textContent = userBook.title;
+  userBookDivAuthorValue.textContent = userBook.author;
+  userBookDivPagesValue.textContent = userBook.pages;
+  removeButton.textContent = "Del";
+  checkboxLabel.textContent = "Read";
+
+  //checkbox changes div color
+  checkbox.addEventListener('change', function() {
+    if (checkbox.checked == true) {
+      userBookDiv.style.backgroundColor = "#adf7b6";
+      myLibrary[parseInt(this.dataset.index)].read = 'true';
+      console.log(myLibrary);
+    }
+    else {
+      userBookDiv.style.backgroundColor = "#ffc09f";
+      myLibrary[parseInt(this.dataset.index)].read = 'false';
+    }
+  })
+}
+
+//eventlisteners
 newBookBtn.addEventListener("click", function() {
-  modal.classList.toggle("show-modal");
+  toggleDiv();
 });
+
 closeButton.addEventListener("click", function() {
-  modal.classList.toggle("show-modal");
+  toggleDiv();
+});
+
+form.addEventListener("submit", function(e) {
+  toggleDiv();
+  e.preventDefault();
+  addBooks();
+  form.reset();
 });
