@@ -1,7 +1,12 @@
 const newBookBtn = document.querySelector(".newBookBtn");
 const closeButton = document.querySelector(".closeButton");
+const modalContainer = document.querySelector(".modal-container");
 const modal = document.querySelector("#modal");
 const form = document.querySelector("form");
+const formTitle = document.querySelector("#title");
+  const formAuthor = document.querySelector("#author");
+  const formPages = document.querySelector("#pages");
+  const libraryDiv = document.querySelector(".libraryDiv");
 
 class Book {
   constructor(title, author, pages, read) {
@@ -21,11 +26,6 @@ class Library {
 const library = new Library();
 
 function addBooks() {
-  const formTitle = document.querySelector("#title");
-  const formAuthor = document.querySelector("#author");
-  const formPages = document.querySelector("#pages");
-  const libraryDiv = document.querySelector(".libraryDiv");
-  
   //create userBook object and push into myLibrary array
   let userBook = new Book(
     formTitle.value,
@@ -100,17 +100,22 @@ function addBooks() {
 
   removeButton.addEventListener("click", function (e) {
     e.preventDefault();
-
     //removes the book from myLibrary
-    let indexToRemove = parseInt(removeButton.dataset.index);
-    library.myLibrary.splice(indexToRemove, 1);
-
-    //removes the div from the page
-    if (removeButton.dataset.index === userBookDiv.dataset.index) {
-      userBookDiv.remove();
+const deleteBookFromLibrary = (() => {
+  library.myLibrary.forEach((e) => {
+    if(library.myLibrary.indexOf(e) === parseInt(removeButton.dataset.index)) {
+      library.myLibrary.splice(e, 1)
     }
-  });
-
+  })
+})()
+//removes the div from the page
+const deleteBookFromDisplay = (() => {
+  if (removeButton.dataset.index === userBookDiv.dataset.index) {
+    userBookDiv.remove();
+    console.log(library.myLibrary);
+  }
+})()
+});
   //display book data in div
   userBookDivTitle.textContent = "Title:";
   userBookDivAuthor.textContent = "Author:";
@@ -135,21 +140,29 @@ function addBooks() {
 }
 
 function toggleDiv() {
-  modal.classList.toggle("toggle");
+  modal.classList.add("show");
 }
 
 //eventlisteners
 newBookBtn.addEventListener("click", function () {
-  toggleDiv();
+  modal.classList.add("show");
+  modalContainer.classList.add("show");
 });
 
-closeButton.addEventListener("click", function () {
-  toggleDiv();
-});
+// closeButton.addEventListener("click", function () {
+//   toggleDiv();
+// });
 
 form.addEventListener("submit", function (e) {
-  toggleDiv();
   e.preventDefault();
+  modal.classList.remove("show");
+  modalContainer.classList.remove("show");
   addBooks();
   form.reset();
 });
+
+window.onclick = function (event) {
+  if (event.target === modalContainer) {
+    modalContainer.classList.remove("show");
+  }
+};
